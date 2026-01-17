@@ -1,4 +1,2 @@
-const String home ="Home";
-const String offers ="Offers";
-const String list ="List";
-const String account ="Account";
+const String home ="Categories";
+const String account ="Profile";
