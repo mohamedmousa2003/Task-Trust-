@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class MyColors{
   static const Color background = Color(0xFFFAF0E6);//FAF0E6
   static const Color darkBrown = Color(0xFF411E0F);
+  static const Color darkBrownUn = Color(0xFF784432);
   static const Color bluePrimary = Color(0xFF004CFF);
   static const Color blueAccent = Color(0xFF004BFE);
 

@@ -1,7 +1,9 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
+import '../exceptions/network_exception.dart';
 import '../network/logger_interceptor.dart';
 
 
@@ -29,16 +31,29 @@ class ApiManager {
     dio.interceptors.add(LoggerInterceptor(_logger));
   }
 
+  // ---------------- Network check ----------------
+  Future<void> _checkNetwork() async {
+    final result = await Connectivity().checkConnectivity();
+    if (result == ConnectivityResult.none) {
+      throw NetworkException();
+    }
+  }
+
   /////////// Get /////////////
   Future<Response> getData({
     required String endPoint,
     Map<String, dynamic>? param,
     Map<String, dynamic>? headers,
   }) async {
+    await _checkNetwork(); // <-- Network check
+
     return dio.get(
       endPoint,
       queryParameters: param,
-      options: Options(headers: headers,validateStatus: (status) => true),
+      options: Options(
+        headers: headers,
+        validateStatus: (status) => true,
+      ),
     );
   }
 
@@ -48,20 +63,9 @@ class ApiManager {
     Map<String, dynamic>? body,
     Map<String, dynamic>? headers,
   }) async {
-    return dio.post(
-      endPoint,
-      data: body,
-      options: Options(headers: headers ,validateStatus: (status) => true,),
-    );
-  }
+    await _checkNetwork(); // <-- Network check
 
-  ////// Delete //////
-  Future<Response> deleteData({
-    required String endPoint,
-    Map<String, dynamic>? body,
-    Map<String, dynamic>? headers,
-  }) async {
-    return dio.delete(
+    return dio.post(
       endPoint,
       data: body,
       options: Options(
@@ -71,5 +75,21 @@ class ApiManager {
     );
   }
 
+  ////// Delete ///////
+  Future<Response> deleteData({
+    required String endPoint,
+    Map<String, dynamic>? body,
+    Map<String, dynamic>? headers,
+  }) async {
+    await _checkNetwork(); // <-- Network check
 
+    return dio.delete(
+      endPoint,
+      data: body,
+      options: Options(
+        headers: headers,
+        validateStatus: (status) => true,
+      ),
+    );
+  }
 }
