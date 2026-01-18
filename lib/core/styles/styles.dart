@@ -6,7 +6,7 @@ class AppTextStyles {
 
 
   static TextStyle textStyle24 = TextStyle(
-    color: MyColors.white,
+    color: MyColors.darkBrown,
     fontSize: 24.sp,
     fontWeight: FontWeight.bold,
   );
