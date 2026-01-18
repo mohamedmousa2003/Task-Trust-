@@ -32,7 +32,6 @@ class _CategoriesViewState extends State<CategoriesView>
   }
 
   void _initTabController(int length) {
-    // لو مش موجود أو الطول مختلف، نعمله init جديد
     if (_tabController == null || _tabController!.length != length) {
       _tabController?.dispose();
       _tabController = TabController(length: length, vsync: this);
