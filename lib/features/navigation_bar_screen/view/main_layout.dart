@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/styles/colors.dart';
 import '../../../core/styles/styles.dart';
-import '../../cart/presentation/pages/cart_view.dart';
+import '../../../di/injectable.dart';
+import '../../cart/presentation/pages/product_screen.dart';
+import '../../cart/presentation/viow_model/cubit/get_cart_cubit.dart';
 import '../navigation_screens.dart';
 import '../view_model/navigation_bar_cubit.dart';
 
@@ -97,7 +99,9 @@ class _NavigationBarView extends StatelessWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      builder: (_) => CartView(),
+      builder: (_) => BlocProvider(
+          create: (BuildContext context)=>getIt.get<GetCartCubit>()..getCart(),
+          child: const ProductScreen()),
     );
   }
 }

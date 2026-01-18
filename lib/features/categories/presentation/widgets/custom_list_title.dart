@@ -85,7 +85,7 @@ class AppHeaderCustom extends StatelessWidget {
                   color: MyColors.red,
                 ),
                 child: const Icon(
-                  Icons.add,
+                  Icons.shopping_cart,
                   color: Colors.white,
                 ),
               ),
