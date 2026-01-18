@@ -10,6 +10,8 @@ import 'cart_data_source.dart';
 @Injectable(as: GetCartDataSource)
 class GetCartDataSourceImpl implements GetCartDataSource {
 
+
+  ////// get
   @override
   Future<GetCartModel> getCart() async {
     try {
@@ -27,6 +29,7 @@ class GetCartDataSourceImpl implements GetCartDataSource {
     }
   }
 
+  /////// add
   @override
   Future<AddCart> addToCart(AddCart model) async {
     try{
@@ -41,11 +44,12 @@ class GetCartDataSourceImpl implements GetCartDataSource {
     }
   }
 
+  /////// delete
   @override
   Future<DeleteCart> deleteFromCart(DeleteCart deleteCart) async{
     try{
       final response = await getIt<ApiManager>().deleteData(
-          endPoint: EndPoints.cart,
+          endPoint: EndPoints.getORAddCart,
         body:  deleteCart.toJson(),
       );
 

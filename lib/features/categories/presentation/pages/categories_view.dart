@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:task_trust_development/core/styles/colors.dart';
 import 'package:task_trust_development/di/injectable.dart';
+import '../../../../core/constant/images_assets.dart';
 import '../../../../core/styles/app_dailog.dart';
 import '../../../cart/presentation/viow_model/cubit/add_to_cart_cubit.dart';
 import '../../../cart/presentation/viow_model/state/add_to_cart_state.dart';
@@ -57,9 +58,9 @@ class _CategoriesViewState extends State<CategoriesView>
         listener: (context, state) {
           if (state is AddToCartSuccess) {
             AppDialog.showSnackBar(context, "Added to cart successfully ✅") ;
-          } else if (state is AddToCartError) {
+          }
+          else if (state is AddToCartError) {
             AppDialog.showSnackBar(context, state.message) ;
-
           }
         },
         child: BlocBuilder<CategoriesCubit, CategoriesState>(
