@@ -20,3 +20,13 @@ A simple project that demonstrates a Navigation Bar with three main screens:
 - [`dartz`](https://pub.dev/packages/dartz)
 - [`connectivity_plus`](https://pub.dev/packages/connectivity_plus)
 
+## 📱 Screenshots
+
+|                        Categories En                         |                Categories Ar                |                  Add Cart                   |
+|:------------------------------------------------------------:|:-------------------------------------------:|:-------------------------------------------:|
+| ![Categories En ](assets/image/catregorise_en.png) | ![Categories Ar ](assets/image/categories_ar.png) | ![Add Cart ](assets/image/addToCart.png) |
+
+|                 Get Cart                  |                Checkout                |                  Cart                   |                 Profile                 |
+|:-----------------------------------------:|:--------------------------------------:|:-----------------------------------------:|:---------------------------------------:|
+| ![Get Cart](assets/image/get_cart.png) | ![Checkout](assets/image/checkout.png) | ![Cart](assets/image/screenshot/cart.png) | ![Profile](assets/image/profile.png) |
+
