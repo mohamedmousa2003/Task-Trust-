@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/api/end_points.dart';
+import '../../../../core/constant/images_assets.dart';
 import '../../../../core/enum/enum_language.dart';
+import '../../../../core/styles/colors.dart';
+import '../../../../core/styles/styles.dart';
 import '../../../cart/data/models/add_cart.dart';
 import '../../../cart/presentation/viow_model/cubit/add_to_cart_cubit.dart';
 import '../../../profile/presentation/view_model/lanage_cubit.dart';
@@ -34,7 +37,16 @@ class ProductList extends StatelessWidget {
         /// ===== Products =====
         Expanded(
           child: products == null || products.isEmpty
-              ? const Center(child: Text("No products found"))
+              ? Center(child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(AnimationGif.emptyBox),
+              Text("No products found",style: AppTextStyles.textStyle20.copyWith(
+    color: MyColors.darkBrown,
+    fontWeight: FontWeight.bold,
+    ),),
+                ],
+              ))
               : ListView.builder(
             padding:
             EdgeInsets.symmetric(vertical: 8.h, horizontal: 16.w),
@@ -54,7 +66,7 @@ class ProductList extends StatelessWidget {
                     items: [
                       Items(
                           productId: product.id,
-                          quantity: 2,
+                          quantity: 1,
                           addons: [
                             Addons(
                               name: product.name,

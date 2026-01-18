@@ -2,10 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../core/api/end_points.dart';
+
+import '../../../../core/constant/images_assets.dart';
+import '../../../../core/enum/enum_language.dart';
 import '../../../../core/styles/app_dailog.dart';
 import '../../../../core/styles/colors.dart';
-import '../../data/models/delete_cart.dart';
+import '../../../../core/styles/styles.dart';
+import '../../../profile/presentation/view_model/lanage_cubit.dart';
 import '../viow_model/cubit/get_cart_cubit.dart';
 import '../widgets/cart_item.dart';
 import '../widgets/custom_button.dart';
@@ -20,46 +23,43 @@ class ProductScreen extends StatefulWidget {
 }
 
 class _ProductScreenState extends State<ProductScreen> {
-
-
   @override
   void initState() {
     super.initState();
-
+    context.read<GetCartCubit>().getCart();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<GetCartCubit, GetCartState>(
-
       listener: (context, state) {
-
-        if (state is DeleteCartLoaded) {
-          AppDialog.showSnackBar(context, "Item removed successfully") ;
-
-        }
-
-        // Listener for errors
         if (state is GetCartError) {
-          AppDialog.showSnackBar(context, state.message) ;
-
+          AppDialog.showSnackBar(context, state.message);
         }
       },
       builder: (context, state) {
+        /// Loading
         if (state is GetCartLoading) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator(
-             color: MyColors.darkBrown,
-            )),
+          return Scaffold(
+            body: Center(
+              child: Image.asset(
+                AnimationGif.loading,
+                height: 200.h,
+                width: 200.w,
+                color: MyColors.darkBrown,
+              ),
+            ),
           );
         }
 
+        /// Error
         if (state is GetCartError) {
           return Scaffold(
             body: Center(child: Text(state.message)),
           );
         }
 
+        /// Loaded
         if (state is GetCartLoaded) {
           final cart = state.carts;
 
@@ -70,42 +70,89 @@ class _ProductScreenState extends State<ProductScreen> {
                 const Divider(),
                 Expanded(
                   child: cart.cartItems == null || cart.cartItems!.isEmpty
-                      ? const Center(child: Text("No items in cart"))
+                      ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(AnimationGif.emptyBox),
+                        Text(
+                          "No items in cart",
+                          style: AppTextStyles.textStyle20.copyWith(
+                            color: MyColors.darkBrown,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
                       : ListView.builder(
                     itemCount: cart.cartItems!.length,
                     itemBuilder: (context, index) {
                       final item = cart.cartItems![index];
+
+                      final int currentQty =
+                      (item.quantity ?? 0).toInt();
+
                       return CartItem(
-                        isLoading: true,
+                        isLoading: state is GetCartLoading,
                         image: item.image ?? "",
-                        text: item.productName ?? "",
+                        text: context.watch<LanguageCubit>().state ==
+                            Language.en
+                            ? (item.productNameEn ?? '')
+                            : (item.productNameAr ?? ''),
                         desc: item.price ?? "",
-                        number: item.quantity ?? 0,
+                        number: currentQty,
+
+                        /// ❌ Delete
                         onRemove: () {
-                          DeleteCart delete = DeleteCart(
-                            quantity: item.quantity,
-                            productId: item.productId,
-                            guestId: EndPoints.guestId,
+                          context.read<GetCartCubit>().updateQuantity(
+                            productId: item.productId!,
+                            quantity: 0,
                           );
-                          context.read<GetCartCubit>().delete(delete);
                         },
-                        onAdd: () {},
-                        onMin: () {},
+
+                        /// ➕ Add
+                        onAdd: () {
+                          context.read<GetCartCubit>().updateQuantity(
+                            productId: item.productId!,
+                            quantity: currentQty + 1,
+                          );
+                        },
+
+                        /// ➖ Min
+                        onMin: () {
+                          if (currentQty > 1) {
+                            context.read<GetCartCubit>().updateQuantity(
+                              productId: item.productId!,
+                              quantity: currentQty - 1,
+                            );
+                          } else {
+                            context.read<GetCartCubit>().updateQuantity(
+                              productId: item.productId!,
+                              quantity: 0,
+                            );
+                          }
+                        },
                       );
                     },
                   ),
                 ),
-                SizedBox(height: 100.h,),
+                SizedBox(height: 100.h),
               ],
             ),
-            bottomSheet: cart.cartItems != null && cart.cartItems!.isNotEmpty
+
+            /// Bottom Sheet
+            bottomSheet: cart.cartItems != null &&
+                cart.cartItems!.isNotEmpty
                 ? Container(
               width: double.infinity,
               height: 100,
               color: Colors.white,
               child: Padding(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 8.0, vertical: 3),
+                  horizontal: 8,
+                  vertical: 3,
+                ),
                 child: Row(
                   children: [
                     Column(
@@ -118,7 +165,7 @@ class _ProductScreenState extends State<ProductScreen> {
                           color: MyColors.darkBrown,
                         ),
                         CustomText(
-                          text: '\$${state.carts.totalPrice}',
+                          text: '\$${cart.totalPrice}',
                           size: 25,
                           weight: FontWeight.bold,
                           color: MyColors.darkBrown,
@@ -127,7 +174,7 @@ class _ProductScreenState extends State<ProductScreen> {
                     ),
                     const Spacer(),
                     CustomButton(
-                      widget: Icon(
+                      widget: const Icon(
                         CupertinoIcons.money_dollar,
                         color: MyColors.white,
                         size: 30,
@@ -142,7 +189,7 @@ class _ProductScreenState extends State<ProductScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (_) => CheckScreen(
-                              getCart: state.carts,
+                              getCart: cart,
                             ),
                           ),
                         );
@@ -156,9 +203,8 @@ class _ProductScreenState extends State<ProductScreen> {
           );
         }
 
-        // fallback UI
-        return Scaffold(
-          body: const Center(child: Text("No Data")),
+        return const Scaffold(
+          body: Center(child: Text("No Data")),
         );
       },
     );

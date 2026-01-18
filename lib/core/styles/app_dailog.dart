@@ -2,28 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:task_trust_development/core/styles/styles.dart';
 
+import '../constant/images_assets.dart';
 import 'colors.dart';
 
 
 class AppDialog {
 
-  // static void showLoading({
-  //   required BuildContext context,
-  // }) {
-  //   showDialog(
-  //     context: context,
-  //     barrierDismissible: false,
-  //     builder: (context) {
-  //       return Center(
-  //         child: Image.asset(
-  //           AnimationGif.loading,
-  //           height: 80.h,
-  //           width: 80.w,
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
+  static void showLoading({
+    required BuildContext context,
+  }) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return Center(
+          child: Image.asset(
+            AnimationGif.loading,
+            height: 80.h,
+            width: 80.w,
+          ),
+        );
+      },
+    );
+  }
 
   static void hideLoading(BuildContext context) {
     if (Navigator.canPop(context)) {

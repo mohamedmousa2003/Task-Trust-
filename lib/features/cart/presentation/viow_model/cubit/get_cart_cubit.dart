@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 import 'package:meta/meta.dart';
 
+import '../../../../../core/api/end_points.dart';
 import '../../../../../di/injectable.dart';
 import '../../../data/models/delete_cart.dart';
 import '../../../data/models/get_cart.dart';
@@ -27,7 +28,33 @@ class GetCartCubit extends Cubit<GetCartState> {
     );
   }
 
-  delete(DeleteCart cart)async{
+
+  Future<void> updateQuantity({
+    required num productId,
+    required num quantity,
+  }) async {
+    emit(GetCartLoading());
+
+    final result = await getIt<DeleteUseCase>().call(
+      DeleteCart(
+        guestId: EndPoints.guestId,
+        productId: productId,
+        quantity: quantity,
+      ),
+    );
+
+    result.fold(
+          (failure) {
+        emit(GetCartError(failure.message));
+      },
+          (_) async {
+        await getCart(); // refresh
+      },
+    );
+  }
+
+
+  delete(DeleteCart cart) async {
     emit(GetCartLoading());
 
     final result = await getIt<DeleteUseCase>().call(cart);
@@ -36,9 +63,10 @@ class GetCartCubit extends Cubit<GetCartState> {
           (failure) {
         emit(GetCartError(failure.message));
       },
-          (data) {
-        emit(DeleteCartLoaded(data));
+          (data) async {
+        await getCart();
       },
     );
   }
+
 }
