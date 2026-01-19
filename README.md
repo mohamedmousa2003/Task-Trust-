@@ -30,3 +30,6 @@ A simple project that demonstrates a Navigation Bar with three main screens:
 |:-----------------------------------------:|:--------------------------------------:|:-----------------------------------------:|:---------------------------------------:|
 | ![Get Cart](assets/image/get_cart.png) | ![Checkout](assets/image/checkout.png) | ![Cart](assets/image/screenshot/cart.png) | ![Profile](assets/image/profile.png) |
 
+
+## 🎥 Demo Video
+[![Watch the demo](https://img.youtube.com/vi/0SdOKQydfIQ/0.jpg)](https://youtu.be/0SdOKQydfIQ)
